@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhoneProof · Privacy policy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,700;6..12,800&display=swap">
+<link rel="stylesheet" href="/page.css">
+<style>.doc h2{margin:32px 0 8px;font-size:20px}.doc p,.doc li{margin-top:8px}.doc ul{padding-left:20px}.doc{padding-bottom:48px}</style>
+</head>
+<body>
+<section class="verdict verdict--none"><div class="wrap">
+  <a class="brand" href="/">PhoneProof</a>
+  <h1 style="margin-top:24px">Privacy policy</h1>
+  <p class="lede">Last updated: <!-- EDIT --> 25 October 2026</p>
+</div></section>
+<main class="wrap doc">
+<p>PhoneProof ("the app") is made by Mohd Faraz Khan, an individual developer in India. Contact: <a href="mailto:CONTACT_EMAIL"><!-- EDIT -->CONTACT_EMAIL</a>. This policy covers the Android app and the report pages at this website.</p>
+
+<h2>The short version</h2>
+<ul>
+  <li>No account. We don't ask for your name, email or phone number.</li>
+  <li>The tests run on your phone. Camera and microphone are used only during their tests; nothing is recorded or saved.</li>
+  <li>A report leaves your phone only if you tap "Get a verify link". It's then stored for 90 days and anyone with the link can see it.</li>
+  <li>The app shows ads from Google AdMob, which collects some data for advertising (see below).</li>
+</ul>
+
+<h2>What happens on your phone</h2>
+<p>The self-test reads hardware information (for example battery temperature and charge cycles, sensors present, screen touch responses) and asks you simple questions. The camera preview is used to check the image brightness, and the microphone listens for a short test tone for about 2 seconds. Images and sound are processed in memory and discarded straight away. Results are signed with a key held in your phone's security hardware and saved in the app's private storage. Uninstalling the app deletes them.</p>
+<p>Meet-up mode works offline: the buyer's phone shows a QR code and your phone answers with a QR code. Nothing is sent to us.</p>
+
+<h2>When you get a verify link</h2>
+<p>If you tap "Get a verify link", the app sends the signed report to our server (a Cloudflare Worker). A report contains: phone brand, model and Android version; the test results and measurements; the device certificate chain produced by Android, which identifies the phone model and security state but not you; a device key ID; and, only if you entered them, the IMEI and your note (links, emails and phone numbers are removed from notes). If Google Play Integrity is enabled, the app also sends a Google Play Integrity token so Google can confirm the app and device are genuine; Google's privacy policy applies to that check.</p>
+<p>Your IP address is used briefly to limit abuse (rate limiting) and is not stored with the report. Reports are deleted automatically 90 days after upload. To delete one sooner, email us the link.</p>
+<p>Anyone with the link can see the report. Only share it with people you want to see it, and leave out the IMEI if you don't want to show it.</p>
+
+<h2>Ads</h2>
+<p>The app is free and shows ads from Google AdMob. AdMob may collect and share your device's advertising ID, approximate location derived from your IP address, ad interactions and diagnostic data, to show and measure ads and prevent fraud. In the EEA, the UK and other places where it's required, you're asked for consent first, and you can change your choice any time from the app's Help screen ("Ad privacy choices"). You can reset or delete your advertising ID in Android settings. See <a href="https://policies.google.com/technologies/partner-sites">how Google uses information from apps that use its services</a>. There are no ads in the test wizard, on reports or in meet-up mode.</p>
+
+<h2>What we don't do</h2>
+<ul>
+  <li>We don't sell data.</li>
+  <li>We don't read your files, photos, contacts, messages, call history, location or the list of apps you have.</li>
+  <li>The app doesn't read the IMEI from the system. It's only there if you type it.</li>
+</ul>
+
+<h2>Where data is processed</h2>
+<p>Uploaded reports are stored with Cloudflare (R2 storage) and may be processed in any country where Cloudflare operates. Data is encrypted in transit (HTTPS).</p>
+
+<h2>Children</h2>
+<p>PhoneProof is meant for adults buying or selling phones and isn't directed at children under 13 (or the age required in your country).</p>
+
+<h2>Your rights</h2>
+<p>Depending on where you live (for example under India's Digital Personal Data Protection Act, the GDPR or US state laws), you can ask to access or delete data about you. Because we hold no account data, the only personal data we may have is an uploaded report; email us its link and we'll delete it within 30 days.</p>
+
+<h2>Changes</h2>
+<p>If this policy changes, the new version will be posted here with a new date. Significant changes will be shown in the app.</p>
+</main>
+</body>
+</html>

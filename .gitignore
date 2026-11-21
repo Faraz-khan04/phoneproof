@@ -1,0 +1,14 @@
+.gradle/
+build/
+/local.properties
+.idea/
+*.iml
+.kotlin/
+build.log
+b.ps1
+START-HERE.md
+*.jks
+*.keystore
+node_modules/
+.wrangler/
+.dev.vars

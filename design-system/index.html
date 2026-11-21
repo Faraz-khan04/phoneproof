@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhoneProof · Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* style-guide chrome only — components/tokens live in styles.css */
+body{font-family:var(--font-body);color:var(--on-surface);background:var(--background);display:flex}
+nav.side{position:sticky;top:0;align-self:flex-start;height:100vh;width:220px;flex:0 0 220px;background:var(--surface-container-lowest);border-right:1px solid var(--outline-variant);padding:22px 14px;overflow:auto}
+nav.side .brand{font:800 20px var(--font-display);color:var(--on-surface);margin:0 0 4px 10px;display:flex;align-items:center;gap:8px}
+nav.side .brand .ico{color:var(--primary)}
+nav.side .ver{font:600 12px var(--font-body);color:var(--outline);margin:0 0 16px 10px}
+nav.side a{display:block;padding:6px 10px;border-radius:var(--r-full);font:600 13px var(--font-body);color:var(--on-surface-variant);text-decoration:none}
+nav.side a:hover{background:var(--surface-container);color:var(--on-surface)}
+nav.side a.concept-link{margin:0 0 8px;padding:12px 14px;font-weight:800;color:var(--on-primary);background:var(--primary)}
+nav.side a.concept-link:hover{background:var(--primary-strong);color:var(--on-primary)}
+nav.side .grp{font:700 11px var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--outline);margin:18px 0 6px 10px}
+main{flex:1;padding:40px 48px 120px;max-width:1080px;min-width:0}
+section{margin-bottom:64px;scroll-margin-top:24px}
+h2.sec{font:800 26px var(--font-display);letter-spacing:-.01em;color:var(--on-surface);margin-bottom:6px;display:flex;align-items:center;flex-wrap:wrap}
+.cat{font:700 12px var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--primary-ink);margin:0 0 20px;padding-top:8px;border-top:1px solid var(--outline-variant)}
+.sec-desc{color:var(--on-surface-variant);font-size:15px;margin-bottom:20px;max-width:700px;line-height:1.6}
+.stage{background:var(--surface-container-lowest);border-radius:var(--r-lg);padding:28px;display:flex;flex-wrap:wrap;gap:28px;align-items:center}
+.stage.canvas{background:var(--background);border:1px solid var(--outline-variant)}
+.stage + .stage{margin-top:12px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:10px}
+.cell.start{align-items:flex-start}
+.spec{font:12px var(--font-mono);color:var(--outline)}
+.colors{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:22px}
+.sw{border-radius:var(--r-sm);overflow:hidden;background:var(--surface-container-lowest);border:1px solid var(--outline-variant)}
+.sw .c{height:64px;display:flex;align-items:flex-end;padding:8px 10px;font:800 15px var(--font-body)}
+.sw .m{padding:8px 10px}.sw .n{font:700 12px var(--font-body)}.sw .v{font:11px var(--font-mono);color:var(--outline)}
+.cgrp{font:700 13px var(--font-body);color:var(--on-surface-variant);margin:6px 0 8px}
+.typerow{display:flex;align-items:baseline;gap:20px;padding:12px 0;border-bottom:1px solid var(--outline-variant)}
+.typerow .tk{width:150px;flex:0 0 150px;font:11px/1.5 var(--font-mono);color:var(--outline)}
+.sprow{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.sprow .bar{background:var(--primary);height:12px;border-radius:3px}.sprow .lbl{width:170px;font:12px var(--font-mono);color:var(--on-surface-variant)}
+.shapes,.elevs{display:flex;flex-wrap:wrap;gap:16px}
+.shape{width:104px;height:80px;background:var(--primary-container);color:var(--on-primary-container);display:flex;align-items:flex-end;padding:8px;font:700 11px var(--font-mono)}
+.elev{width:140px;height:96px;background:var(--surface-container-lowest);border-radius:var(--r-md);display:flex;flex-direction:column;justify-content:flex-end;padding:12px;font:700 12px var(--font-body)}
+.elev span{font:400 11px var(--font-mono);color:var(--outline)}
+.iconGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.iconGrid .it{background:var(--surface-container-lowest);border-radius:var(--r-sm);padding:16px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--on-surface)}
+.iconGrid .it .nm{font:11px var(--font-mono);color:var(--outline)}
+.phone{width:360px;border-radius:var(--r-md);overflow:hidden;background:var(--background);border:1px solid var(--outline-variant);position:relative}
+.mini{transform-origin:top left}
+.gap{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+#topctl{position:fixed;top:16px;right:20px;z-index:50;display:flex;gap:10px;align-items:center}
+#langSel{font:700 12px var(--font-body);border:1px solid var(--outline-variant);border-radius:var(--r-full);padding:9px 12px;background:var(--surface-container-lowest);color:var(--on-surface-variant)}
+.ds-btn{font:700 12px var(--font-body);background:var(--surface-container-lowest);border:1px solid var(--primary);color:var(--primary-ink);border-radius:var(--r-full);padding:9px 14px;cursor:pointer}
+.ds-btn:hover{background:var(--primary-container)}
+#devToggle{font:700 12px var(--font-body);background:var(--surface-container-lowest);border:1px solid var(--outline-variant);border-radius:var(--r-full);padding:9px 14px;cursor:pointer;color:var(--on-surface-variant)}
+#devToggle.on{background:var(--inverse-surface);border-color:var(--inverse-surface);color:var(--inverse-on-surface)}
+.sec-prompt{font:700 11px var(--font-body);border:1px solid var(--primary);background:var(--surface-container-lowest);color:var(--primary-ink);border-radius:var(--r-full);padding:4px 10px;margin-left:12px;cursor:pointer}
+body.dev [data-insp]:hover{outline:2px dashed var(--tertiary);outline-offset:3px;cursor:pointer}
+.insp-sel{outline:2px solid var(--primary)!important;outline-offset:3px}
+#inspector{position:fixed;top:0;right:0;width:350px;height:100vh;background:var(--surface-container-lowest);border-left:1px solid var(--outline-variant);box-shadow:var(--elev-5);transform:translateX(100%);transition:transform var(--dur-slow) var(--ease-emph-dec);z-index:49;overflow:auto;padding:60px 22px 40px}
+body.inspecting #inspector{transform:translateX(0)}
+body.inspecting main{margin-right:350px}
+#inspector .iclose{position:absolute;top:14px;right:14px}
+#inspector .nm{font:800 22px var(--font-display)}
+#inspector .file{font:12px var(--font-mono);color:var(--outline);margin-top:2px}
+#inspector .desc{font-size:14px;color:var(--on-surface-variant);line-height:1.6;margin-top:10px}
+#inspector h4{font:700 11px var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--outline);margin:22px 0 8px}
+.prop{padding:8px 0;border-bottom:1px solid var(--surface-container-high)}.prop .pn{font:700 13px var(--font-mono)}.prop .pt{font:11px var(--font-mono);color:var(--tertiary)}.prop .pdef{font:11px var(--font-mono);color:var(--outline)}
+.tok{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:var(--r-xs);cursor:pointer}.tok:hover{background:var(--surface-container)}
+.tok .tsw{width:22px;height:22px;border-radius:6px;border:1px solid var(--outline-variant);flex:0 0 22px}.tok .tn{font:700 12px var(--font-mono)}.tok .tr{font-size:11px;color:var(--on-surface-variant)}.tok .tv{margin-left:auto;font:11px var(--font-mono);color:var(--outline);text-align:right;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.metric{display:flex;justify-content:space-between;gap:12px;font:12px var(--font-mono);padding:6px 0;border-bottom:1px dashed var(--surface-container-high)}.metric .mk{color:var(--on-surface-variant)}
+@media (max-width:860px){body{display:block}nav.side{display:none}main{padding:96px max(16px,env(safe-area-inset-right,0px)) 80px max(16px,env(safe-area-inset-left,0px))}#topctl{left:16px;right:16px;flex-wrap:wrap}#inspector{width:100%}body.inspecting main{margin-right:0}.stage{overflow-x:auto}#btnMatrix{grid-template-columns:90px repeat(5,minmax(120px,1fr))!important}}
+.copied{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);opacity:0;transition:opacity var(--dur-base);z-index:60;pointer-events:none}.copied.show{opacity:1}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-more-v" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.6" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+  <symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-shield-alert" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v5M12 16h.01"/></symbol>
+  <symbol id="i-smartphone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.5l1.5-2h6l1.5 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-fingerprint" viewBox="0 0 24 24"><path d="M12 11v4a7 7 0 0 1-1.2 3.9"/><path d="M8.6 9.4A4 4 0 0 1 16 11.5V14"/><path d="M5 12a7 7 0 0 1 12.6-4.2"/><path d="M19 11.5V14a11 11 0 0 1-.8 4"/><path d="M8 13.5V15a8 8 0 0 1-1.3 4.3"/><path d="M15.7 17.5a14 14 0 0 1-1.2 3.5"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 20 0"/><path d="M5.5 12.5a10 10 0 0 1 13 0"/><path d="M9 16a5 5 0 0 1 6 0"/><path d="M12 20h.01"/></symbol>
+  <symbol id="i-bluetooth" viewBox="0 0 24 24"><path d="M7 7l10 10-5 5V2l5 5L7 17"/></symbol>
+  <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M19 10c0 6-7 12-7 12s-7-6-7-12a7 7 0 0 1 14 0z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-vibrate" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="16" rx="2"/><path d="M3 8v8M21 8v8"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+  <symbol id="i-nfc" viewBox="0 0 24 24"><path d="M7 8.5a5 5 0 0 1 0 7"/><path d="M10.5 6a9 9 0 0 1 0 12"/><path d="M14 3.5a13 13 0 0 1 0 17"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20.5 14v.01M14 20.5h.01M17.5 20.5H21v-3"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M3 8V6a3 3 0 0 1 3-3h2M16 3h2a3 3 0 0 1 3 3v2M21 16v2a3 3 0 0 1-3 3h-2M8 21H6a3 3 0 0 1-3-3v-2"/><path d="M7 12h10"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M16 6l-4-4-4 4M12 2v13"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4.5A2.5 2.5 0 0 1 2 12.5v-8A2.5 2.5 0 0 1 4.5 2h8A2.5 2.5 0 0 1 15 4.5V5"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="M21 15l-5-5L5 21"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 16v-4.5M12 8h.01"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M9.2 9a3 3 0 0 1 5.8 1c0 2-3 2.8-3 2.8M12 17h.01"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-1.5a4.5 4.5 0 0 0-4.5-4.5h-7A4.5 4.5 0 0 0 4 19.5V21"/><circle cx="12" cy="7.5" r="4"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18M6 12h12M10 19h4"/></symbol>
+</svg>
+
+
+<div id="topctl">
+  <button class="ds-btn" onclick="copyFullSystem()" title="Copy one prompt that installs or updates the whole system">Install design system</button>
+  <select id="langSel" title="Copy-as-prompt target" aria-label="Prompt target language"></select>
+  <button id="devToggle" onclick="toggleDev()">Dev Mode</button>
+</div>
+<aside id="inspector"><button class="iconbtn sl iclose" aria-label="Close inspector" onclick="closeInspector()"><svg class="ico"><use href="#i-close"/></svg></button><div id="inspectorBody"></div></aside>
+<div class="snackbar copied" id="copied"><span class="grow" id="copiedTxt">Copied</span></div>
+
+<nav class="side">
+  <div class="brand"><svg class="ico"><use href="#i-shield-check"/></svg>PhoneProof</div>
+  <div class="ver">Design system · Signal blocks</div>
+  <a class="concept-link" href="concept.html">Concept preview →</a>
+  <div class="grp">Foundations</div>
+  <a href="#colors">Color</a><a href="#type">Typography</a><a href="#shape">Shape</a><a href="#elevation">Elevation</a><a href="#states">State layers</a><a href="#spacing">Spacing</a><a href="#motion">Motion</a><a href="#icons">Icons</a>
+  <div class="grp">Actions</div>
+  <a href="#button">Buttons</a><a href="#iconbutton">Icon buttons</a><a href="#fab">FAB</a><a href="#segmented">Segmented buttons</a>
+  <div class="grp">Communication</div>
+  <a href="#badge">Badge</a><a href="#progress">Progress</a><a href="#snackbar">Snackbar</a><a href="#tooltip">Tooltip</a>
+  <div class="grp">Containment</div>
+  <a href="#card">Card</a><a href="#carousel">Carousel</a><a href="#divider">Divider</a><a href="#list">Lists</a><a href="#sheet">Bottom sheet</a><a href="#dialog">Dialog</a>
+  <div class="grp">Navigation</div>
+  <a href="#topbar">Top app bar</a><a href="#navbar">Navigation bar</a><a href="#navrail">Navigation rail</a><a href="#drawer">Navigation drawer</a><a href="#tabs">Tabs</a><a href="#search">Search</a><a href="#menu">Menu</a>
+  <div class="grp">Selection</div>
+  <a href="#checkbox">Checkbox</a><a href="#chip">Chips</a><a href="#radio">Radio button</a><a href="#switch">Switch</a><a href="#slider">Slider</a><a href="#datepicker">Date picker</a><a href="#timepicker">Time picker</a>
+  <div class="grp">Text inputs</div>
+  <a href="#textfield">Text field</a>
+  <div class="grp">Extensions · PhoneProof</div>
+  <a href="#verdict">Verdict block</a><a href="#disc">Status disc</a><a href="#testrow">Test row</a><a href="#stepbar">Wizard step bar</a><a href="#stat">Stat</a>
+</nav>
+
+<main>
+  <header style="margin-bottom:48px">
+    <div class="display-s">PhoneProof design system</div>
+    <p class="body-l muted" style="margin-top:12px;max-width:720px">Material 3 structure, "Signal blocks" look: white cards on a soft cool-grey canvas, one teal-blue interaction family, and one big colour block per screen for the verdict. Source of truth: <code>styles.css</code>. Turn on <b>Dev Mode</b> to inspect any component, or use <b>Copy as prompt</b> to build it in Jetpack Compose.</p>
+  </header>
+
+  <!-- ================= FOUNDATIONS ================= -->
+  <div class="cat">Foundations</div>
+  <section id="colors"><h2 class="sec">Color</h2>
+    <p class="sec-desc">OKLCH tonal ramp from seed <code>#0B6E8A</code>. Every fill is shown with its paired foreground; all text pairs are ≥ 4.5:1 by calculation. Status colours are the only saturated hues outside primary, and each carries one meaning.</p>
+    <div id="colorGrid"></div></section>
+
+  <section id="type"><h2 class="sec">Typography</h2>
+    <p class="sec-desc">One family, Nunito Sans. Rounded terminals give warmth; 800 weight only on display and headline. Body stays 400 for reading; numbers use tabular figures.</p>
+    <div id="typeList"></div></section>
+
+  <section id="shape"><h2 class="sec">Shape</h2>
+    <p class="sec-desc">Soft, chunky geometry. Cards and sheets use <code>large</code> (32); buttons and chips are pills.</p>
+    <div class="shapes" id="shapeList"></div></section>
+
+  <section id="elevation"><h2 class="sec">Elevation</h2>
+    <p class="sec-desc">Tonal first: a card is white on the grey canvas, with no shadow. Only floating things (menus, FAB, sheets, dialogs) get a soft shadow. Never a border and a shadow on the same card.</p>
+    <div class="stage canvas elevs" id="elevList"></div></section>
+
+  <section id="states"><h2 class="sec">State layers</h2>
+    <p class="sec-desc">An overlay of the content colour at fixed opacities. Focus also draws a 2px ring with a 2px gap.</p>
+    <div class="stage">
+      <div class="cell"><div class="btn btn-tonal sl">Enabled</div><div class="spec">0</div></div>
+      <div class="cell"><div class="btn btn-tonal sl is-hover">Hover</div><div class="spec">--state-hover .08</div></div>
+      <div class="cell"><div class="btn btn-tonal sl is-focus">Focus</div><div class="spec">--state-focus .10 + ring</div></div>
+      <div class="cell"><div class="btn btn-tonal sl is-pressed">Pressed</div><div class="spec">--state-pressed .10</div></div>
+      <div class="cell"><div class="btn btn-tonal is-disabled">Disabled</div><div class="spec">content .38 · container .12</div></div>
+    </div></section>
+
+  <section id="spacing"><h2 class="sec">Spacing</h2>
+    <p class="sec-desc">4dp grid. Semantic roles keep the calm rhythm: related items 8, sections 24, major blocks 40, screen gutter 20.</p>
+    <div id="spacingList"></div></section>
+
+  <section id="motion"><h2 class="sec">Motion</h2>
+    <p class="sec-desc">Purposeful only: state changes and screen entries. No decorative loops; spinners stop under reduced motion.</p>
+    <div id="motionList"></div></section>
+
+  <section id="icons"><h2 class="sec">Icons</h2>
+    <p class="sec-desc">Inline SVG sprite, Material-outlined geometry with round caps to match Nunito. Glyph 24, touch target 48. Never emoji.</p>
+    <div class="iconGrid" id="iconGrid"></div></section>
+
+  <!-- ================= ACTIONS ================= -->
+  <div class="cat">Actions</div>
+  <section id="button"><h2 class="sec">Buttons</h2>
+    <p class="sec-desc">Pill-shaped, 48 tall (56 for the one primary action on a screen). Filled is for that one action; tonal and outlined for the rest.</p>
+    <div class="stage" id="btnMatrix"></div>
+    <div class="stage">
+      <div class="cell"><div class="btn btn-filled btn-lg sl" data-insp="button"><svg class="ico"><use href="#i-shield-check"/></svg>Check this phone</div><div class="spec">filled · large · icon</div></div>
+      <div class="cell"><div class="btn btn-danger sl" data-insp="button"><svg class="ico"><use href="#i-trash"/></svg>Delete report</div><div class="spec">danger (dialogs only)</div></div>
+    </div></section>
+
+  <section id="iconbutton"><h2 class="sec">Icon buttons</h2>
+    <p class="sec-desc">24 glyph inside a 48 target. Toggle variants show selected and unselected.</p>
+    <div class="stage">
+      <div class="cell"><div class="iconbtn sl" data-insp="iconbutton" aria-label="More"><svg class="ico"><use href="#i-more-v"/></svg></div><div class="spec">standard</div></div>
+      <div class="cell"><div class="iconbtn iconbtn-filled sl" data-insp="iconbutton" aria-label="Share"><svg class="ico"><use href="#i-share"/></svg></div><div class="spec">filled</div></div>
+      <div class="cell"><div class="iconbtn iconbtn-tonal sl" data-insp="iconbutton" aria-label="Copy link"><svg class="ico"><use href="#i-copy"/></svg></div><div class="spec">tonal</div></div>
+      <div class="cell"><div class="iconbtn iconbtn-outlined sl" data-insp="iconbutton" aria-label="Show QR"><svg class="ico"><use href="#i-qr"/></svg></div><div class="spec">outlined</div></div>
+      <div class="cell"><div class="iconbtn iconbtn-filled sl" data-insp="iconbutton" aria-label="Flash on"><svg class="ico"><use href="#i-sun"/></svg></div><div class="spec">toggle · selected</div></div>
+      <div class="cell"><div class="iconbtn iconbtn-filled unselected sl" data-insp="iconbutton" aria-label="Flash off"><svg class="ico"><use href="#i-sun"/></svg></div><div class="spec">toggle · unselected</div></div>
+      <div class="cell"><div class="iconbtn iconbtn-outlined selected sl" data-insp="iconbutton" aria-label="Pinned"><svg class="ico"><use href="#i-eye"/></svg></div><div class="spec">outlined · selected</div></div>
+      <div class="cell"><div class="iconbtn iconbtn-outlined is-disabled" data-insp="iconbutton" aria-label="Disabled"><svg class="ico"><use href="#i-download"/></svg></div><div class="spec">disabled</div></div>
+    </div></section>
+
+  <section id="fab"><h2 class="sec">FAB</h2>
+    <p class="sec-desc">Primary-container fill, level-3 shadow. Use at most one per screen; the home screen uses the large filled button instead.</p>
+    <div class="stage canvas">
+      <div class="cell"><div class="fab fab-small sl" data-insp="fab" aria-label="Scan"><svg class="ico"><use href="#i-scan"/></svg></div><div class="spec">small 40</div></div>
+      <div class="cell"><div class="fab sl" data-insp="fab" aria-label="Scan"><svg class="ico"><use href="#i-scan"/></svg></div><div class="spec">regular 56</div></div>
+      <div class="cell"><div class="fab fab-large sl" data-insp="fab" aria-label="Scan"><svg class="ico"><use href="#i-scan"/></svg></div><div class="spec">large 96</div></div>
+      <div class="cell"><div class="fab fab-extended sl" data-insp="fab"><svg class="ico"><use href="#i-qr"/></svg>Scan buyer's code</div><div class="spec">extended</div></div>
+    </div></section>
+
+  <section id="segmented"><h2 class="sec">Segmented buttons</h2>
+    <p class="sec-desc">Two to five related options. Selected segment is tonal with a check.</p>
+    <div class="stage">
+      <div class="cell start"><div class="segmented" data-insp="segmented"><div class="seg sl sel"><svg class="ico"><use href="#i-check"/></svg>All</div><div class="seg sl">Passed</div><div class="seg sl">Issues</div></div><div class="spec">single-select</div></div>
+      <div class="cell start"><div class="segmented" data-insp="segmented"><div class="seg sl sel"><svg class="ico"><use href="#i-check"/></svg>Camera</div><div class="seg sl sel"><svg class="ico"><use href="#i-check"/></svg>Audio</div><div class="seg sl">Radios</div></div><div class="spec">multi-select</div></div>
+    </div></section>
+
+  <!-- ================= COMMUNICATION ================= -->
+  <div class="cat">Communication</div>
+  <section id="badge"><h2 class="sec">Badge</h2>
+    <p class="sec-desc">Small dot for "something new", large for a count.</p>
+    <div class="stage">
+      <div class="cell"><span class="badge-host" data-insp="badge"><span class="iconbtn"><svg class="ico"><use href="#i-history"/></svg></span><span class="badge-dot"></span></span><div class="spec">small</div></div>
+      <div class="cell"><span class="badge-host" data-insp="badge"><span class="iconbtn"><svg class="ico"><use href="#i-bell"/></svg></span><span class="badge num">3</span></span><div class="spec">large · 3</div></div>
+      <div class="cell"><span class="badge-host" data-insp="badge"><span class="iconbtn"><svg class="ico"><use href="#i-bell"/></svg></span><span class="badge num">99+</span></span><div class="spec">large · max</div></div>
+    </div></section>
+
+  <section id="progress"><h2 class="sec">Progress indicators</h2>
+    <p class="sec-desc">Linear for a known step, circular while signing or uploading.</p>
+    <div class="stage">
+      <div class="cell start" style="width:280px" data-insp="progress"><div class="label-m muted">Signing report · 60%</div><div class="progress-linear"><div class="bar" style="width:60%"></div></div><div class="spec">linear · determinate</div></div>
+      <div class="cell start" style="width:280px" data-insp="progress"><div class="label-m muted">Checking with Google Play…</div><div class="progress-linear indeterminate"><div class="bar"></div></div><div class="spec">linear · indeterminate</div></div>
+      <div class="cell" data-insp="progress"><svg class="progress-circular" viewBox="0 0 48 48"><circle class="track" cx="24" cy="24" r="20"/><circle class="ind" cx="24" cy="24" r="20" stroke-dasharray="125.6" stroke-dashoffset="44"/></svg><div class="spec">circular · 65%</div></div>
+      <div class="cell" data-insp="progress"><svg class="progress-circular indeterminate" viewBox="0 0 48 48"><circle class="track" cx="24" cy="24" r="20"/><circle class="ind" cx="24" cy="24" r="20" stroke-dasharray="125.6" stroke-dashoffset="90"/></svg><div class="spec">circular · indeterminate</div></div>
+    </div></section>
+
+  <section id="snackbar"><h2 class="sec">Snackbar</h2>
+    <p class="sec-desc">Short confirmations at the bottom; one optional action.</p>
+    <div class="stage">
+      <div class="cell start"><div class="snackbar" data-insp="snackbar"><span class="grow">Report link copied</span></div><div class="spec">no action</div></div>
+      <div class="cell start"><div class="snackbar" data-insp="snackbar"><span class="grow">Report deleted</span><span class="act sl">Undo</span></div><div class="spec">with action</div></div>
+    </div></section>
+
+  <section id="tooltip"><h2 class="sec">Tooltip</h2>
+    <p class="sec-desc">Plain for icon labels; rich to explain a term a buyer may not know.</p>
+    <div class="stage">
+      <div class="cell"><span class="tooltip" data-insp="tooltip">Copy link</span><div class="spec">plain</div></div>
+      <div class="cell start"><div class="tooltip-rich" data-insp="tooltip"><div class="tt-title">What is a hardware key?</div>A key stored inside this phone's security chip. It can't be copied, so only this phone can sign its report.<div class="act sl">Learn more</div></div><div class="spec">rich</div></div>
+    </div></section>
+
+  <!-- ================= CONTAINMENT ================= -->
+  <div class="cat">Containment</div>
+  <section id="card"><h2 class="sec">Card</h2>
+    <p class="sec-desc">Filled (white on canvas) is the default. Elevated only when a card floats over content; outlined for secondary groups.</p>
+    <div class="stage canvas">
+      <div class="card card-filled sl" data-insp="card" style="width:240px"><div class="label-m muted">Filled · default</div><div class="title-m" style="margin-top:8px">Pixel 7 · 128 GB</div><div class="body-s" style="margin-top:4px">Tested 24 Oct 2026</div></div>
+      <div class="card card-elevated sl" data-insp="card" style="width:240px"><div class="label-m muted">Elevated</div><div class="title-m" style="margin-top:8px">Meet-up mode</div><div class="body-s" style="margin-top:4px">Prove it's the same phone, in person</div></div>
+      <div class="card card-outlined sl" data-insp="card" style="width:240px"><div class="label-m muted">Outlined</div><div class="title-m" style="margin-top:8px">Not checked</div><div class="body-s" style="margin-top:4px">Water damage, original parts</div></div>
+    </div></section>
+
+  <section id="carousel"><h2 class="sec">Carousel</h2>
+    <p class="sec-desc">Multi-browse carousel for the seller's condition photos. Image slots are placeholders.</p>
+    <div class="stage"><div class="carousel" data-insp="carousel" style="width:100%">
+      <div class="carousel-item"><span class="label-m muted">Image placeholder · Front</span></div>
+      <div class="carousel-item"><span class="label-m muted">Image placeholder · Back</span></div>
+      <div class="carousel-item" style="width:140px"><span class="label-m muted">Left edge</span></div>
+      <div class="carousel-item narrow"></div>
+    </div></div></section>
+
+  <section id="divider"><h2 class="sec">Divider</h2>
+    <p class="sec-desc">Hairline in outline-variant. Prefer spacing; use a divider only inside lists.</p>
+    <div class="stage" style="display:block" data-insp="divider">
+      <div class="spec" style="margin-bottom:8px">full width</div><hr class="divider">
+      <div class="spec" style="margin:16px 0 8px">inset (after leading element)</div><hr class="divider divider-inset">
+      <div class="spec" style="margin:16px 0 8px">middle inset</div><hr class="divider divider-middle">
+    </div></section>
+
+  <section id="list"><h2 class="sec">Lists</h2>
+    <p class="sec-desc">One, two and three-line items with leading and trailing slots.</p>
+    <div class="stage canvas"><div class="list" data-insp="list" style="width:380px">
+      <div class="li sl"><span class="li-lead"><svg class="ico"><use href="#i-settings"/></svg></span><div class="li-text"><div class="li-headline">Settings</div></div><span class="li-trail"><svg class="ico"><use href="#i-chevron-right"/></svg></span></div>
+      <hr class="divider divider-inset">
+      <div class="li li-2line sl"><span class="li-avatar">P7</span><div class="li-text"><div class="li-headline">Pixel 7 · 128 GB</div><div class="li-supporting">24 Oct 2026 · 13 of 15 passed</div></div><span class="li-trail"><span class="chip chip-status warn"><svg class="ico"><use href="#i-alert"/></svg>1 issue</span></span></div>
+      <hr class="divider divider-inset">
+      <div class="li li-3line sl"><span class="li-lead"><span class="disc none"><svg class="ico"><use href="#i-help"/></svg></span></span><div class="li-text"><div class="li-overline">NOT CHECKED BY THIS REPORT</div><div class="li-headline">Original parts</div><div class="li-supporting">Most replacement screens and batteries can't be detected by software. Ask the seller for repair receipts.</div></div></div>
+    </div></div></section>
+
+  <section id="sheet"><h2 class="sec">Bottom sheet</h2>
+    <p class="sec-desc">Standard sheets sit beside content; modal sheets add a scrim. Used for share options.</p>
+    <div class="stage canvas">
+      <div class="cell"><div class="phone" style="height:280px">
+        <div class="sheet standard" data-insp="sheet" style="position:absolute;left:0;right:0;bottom:0"><div class="sheet-handle"></div><div class="title-m">Share report</div>
+          <div class="li sl" style="padding-left:0"><span class="li-lead"><svg class="ico"><use href="#i-link"/></svg></span><div class="li-text li-headline">Copy link</div></div>
+          <div class="li sl" style="padding-left:0"><span class="li-lead"><svg class="ico"><use href="#i-image"/></svg></span><div class="li-text li-headline">Save as image</div></div></div></div><div class="spec">standard</div></div>
+      <div class="cell"><div class="phone" style="height:280px"><div class="scrim"></div>
+        <div class="sheet" data-insp="sheet" style="position:absolute;left:0;right:0;bottom:0"><div class="sheet-handle"></div><div class="title-m">Share report</div>
+          <div class="li sl" style="padding-left:0"><span class="li-lead"><svg class="ico"><use href="#i-link"/></svg></span><div class="li-text li-headline">Copy link</div></div>
+          <div class="li sl" style="padding-left:0"><span class="li-lead"><svg class="ico"><use href="#i-qr"/></svg></span><div class="li-text li-headline">Show QR code</div></div></div></div><div class="spec">modal</div></div>
+    </div></section>
+
+  <section id="dialog"><h2 class="sec">Dialog</h2>
+    <p class="sec-desc">Basic dialogs confirm destructive or irreversible actions. Full-screen dialogs hold a short form.</p>
+    <div class="stage canvas">
+      <div class="cell"><div class="dialog" data-insp="dialog"><div class="d-icon"><svg class="ico ico--lg"><use href="#i-trash"/></svg></div><div class="d-title">Delete this report?</div><div class="d-body">Anyone with the link will see "report not found". You can run a new check at any time.</div><div class="d-actions"><div class="btn btn-text sl">Cancel</div><div class="btn btn-danger sl">Delete</div></div></div><div class="spec">basic</div></div>
+      <div class="cell"><div class="dialog-full" data-insp="dialog"><div class="topbar" style="background:transparent"><span class="iconbtn sl"><svg class="ico"><use href="#i-close"/></svg></span><span class="tb-title">Seller note</span><span class="btn btn-text sl">Save</span></div>
+        <div style="padding:8px 16px"><div class="field field-outlined has-value" style="width:100%"><div class="f-box"><div class="f-in"><span class="f-label">Note for buyers</span><span class="f-value">Small scratch on the frame</span></div></div><div class="f-help">No phone numbers or links · 27/280</div></div></div></div><div class="spec">full-screen</div></div>
+    </div></section>
+
+  <!-- ================= NAVIGATION ================= -->
+  <div class="cat">Navigation</div>
+  <section id="topbar"><h2 class="sec">Top app bar</h2>
+    <p class="sec-desc">Medium and large carry the big page title; small is used once the page scrolls.</p>
+    <div class="stage canvas" style="flex-direction:column;align-items:stretch;gap:12px">
+      <div class="phone" style="width:100%"><div class="topbar topbar-center" data-insp="topbar"><span class="iconbtn sl"><svg class="ico"><use href="#i-back"/></svg></span><span class="tb-title">Report</span><span class="iconbtn sl"><svg class="ico"><use href="#i-share"/></svg></span></div></div><div class="spec">center-aligned</div>
+      <div class="phone" style="width:100%"><div class="topbar scrolled" data-insp="topbar"><span class="iconbtn sl"><svg class="ico"><use href="#i-back"/></svg></span><span class="tb-title">Battery</span><span class="iconbtn sl"><svg class="ico"><use href="#i-help"/></svg></span></div></div><div class="spec">small · scrolled</div>
+      <div class="phone" style="width:100%"><div class="topbar topbar-medium" data-insp="topbar"><span class="iconbtn sl"><svg class="ico"><use href="#i-back"/></svg></span><span class="tb-spacer"></span><span class="iconbtn sl"><svg class="ico"><use href="#i-more-v"/></svg></span><span class="tb-title">Your reports</span></div></div><div class="spec">medium</div>
+      <div class="phone" style="width:100%"><div class="topbar topbar-large" data-insp="topbar"><span class="iconbtn sl"><svg class="ico"><use href="#i-close"/></svg></span><span class="tb-spacer"></span><span class="tb-title">Check a seller's report</span></div></div><div class="spec">large</div>
+    </div></section>
+
+  <section id="navbar"><h2 class="sec">Navigation bar</h2>
+    <p class="sec-desc">Three destinations. The active pill uses secondary-container so it never competes with the primary button.</p>
+    <div class="stage canvas"><div class="phone"><div class="navbar" data-insp="navbar">
+      <div class="nav-item sel"><span class="nav-ind"><svg class="ico"><use href="#i-home"/></svg></span>Home</div>
+      <div class="nav-item"><span class="nav-ind"><svg class="ico"><use href="#i-history"/></svg></span>Reports</div>
+      <div class="nav-item"><span class="nav-ind"><svg class="ico"><use href="#i-scan"/></svg><span class="badge-dot" style="top:4px;right:16px"></span></span>Verify</div>
+    </div></div></div></section>
+
+  <section id="navrail"><h2 class="sec">Navigation rail</h2>
+    <p class="sec-desc">For tablets and foldables (not yet used on phone layouts).</p>
+    <div class="stage canvas"><div class="navrail" data-insp="navrail">
+      <div class="fab sl" aria-label="New check"><svg class="ico"><use href="#i-plus"/></svg></div>
+      <div class="nav-item sel"><span class="nav-ind"><svg class="ico"><use href="#i-home"/></svg></span>Home</div>
+      <div class="nav-item"><span class="nav-ind"><svg class="ico"><use href="#i-history"/></svg></span>Reports</div>
+      <div class="nav-item"><span class="nav-ind"><svg class="ico"><use href="#i-scan"/></svg></span>Verify</div>
+    </div></div></section>
+
+  <section id="drawer"><h2 class="sec">Navigation drawer</h2>
+    <p class="sec-desc">Standard (persistent, large screens) and modal (with scrim). Not yet used on phones.</p>
+    <div class="stage canvas">
+      <div class="cell start"><div class="drawer" data-insp="drawer"><div class="dr-head">PhoneProof</div>
+        <div class="drawer-item sl sel"><svg class="ico"><use href="#i-home"/></svg>Home</div>
+        <div class="drawer-item sl"><svg class="ico"><use href="#i-history"/></svg>Reports<span class="badge-text num">4</span></div>
+        <div class="drawer-item sl"><svg class="ico"><use href="#i-help"/></svg>How it works</div>
+        <div class="drawer-item sl"><svg class="ico"><use href="#i-lock"/></svg>Privacy</div></div><div class="spec">standard</div></div>
+      <div class="cell start"><div class="phone" style="height:300px"><div class="scrim"></div><div class="drawer modal" data-insp="drawer" style="position:absolute;top:0;bottom:0;left:0;width:280px">
+        <div class="dr-head">PhoneProof</div><div class="drawer-item sl sel"><svg class="ico"><use href="#i-home"/></svg>Home</div><div class="drawer-item sl"><svg class="ico"><use href="#i-settings"/></svg>Settings</div></div></div><div class="spec">modal</div></div>
+    </div></section>
+
+  <section id="tabs"><h2 class="sec">Tabs</h2>
+    <p class="sec-desc">Primary tabs switch top-level views of a report; secondary tabs filter within one.</p>
+    <div class="stage canvas" style="flex-direction:column;align-items:stretch">
+      <div class="phone" style="width:100%"><div class="tabs tabs-icons" data-insp="tabs"><div class="tab sl sel"><svg class="ico"><use href="#i-shield-check"/></svg>Results</div><div class="tab sl"><svg class="ico"><use href="#i-smartphone"/></svg>Device</div><div class="tab sl"><svg class="ico"><use href="#i-image"/></svg>Photos</div></div></div><div class="spec">primary · fixed · icons</div>
+      <div class="phone" style="width:100%"><div class="tabs tabs-secondary tabs-scroll" data-insp="tabs"><div class="tab sl sel">All tests</div><div class="tab sl">Display</div><div class="tab sl">Audio</div><div class="tab sl">Cameras</div><div class="tab sl">Sensors</div><div class="tab sl">Radios</div></div></div><div class="spec">secondary · scrollable</div>
+    </div></section>
+
+  <section id="search"><h2 class="sec">Search</h2>
+    <p class="sec-desc">Search bar on the Reports screen; it expands into a search view with suggestions.</p>
+    <div class="stage canvas">
+      <div class="cell start"><div class="searchbar" data-insp="search" style="width:320px"><svg class="ico"><use href="#i-search"/></svg><span class="grow">Search your reports</span><span class="iconbtn sl"><svg class="ico"><use href="#i-filter"/></svg></span></div><div class="spec">bar</div></div>
+      <div class="cell start"><div class="searchview" data-insp="search"><div class="sv-head"><span class="iconbtn sl"><svg class="ico"><use href="#i-back"/></svg></span><span style="flex:1">pixel<span class="caret" style="display:inline-block;width:2px;height:20px;background:var(--primary);vertical-align:middle"></span></span><span class="iconbtn sl"><svg class="ico"><use href="#i-close"/></svg></span></div>
+        <div class="li sl"><span class="li-lead"><svg class="ico"><use href="#i-history"/></svg></span><div class="li-text li-headline">Pixel 7 · 24 Oct</div></div>
+        <div class="li sl"><span class="li-lead"><svg class="ico"><use href="#i-history"/></svg></span><div class="li-text li-headline">Pixel 6a · 2 Jun</div></div></div><div class="spec">view</div></div>
+    </div></section>
+
+  <section id="menu"><h2 class="sec">Menu</h2>
+    <p class="sec-desc">Overflow actions on a report. The destructive item is last and red.</p>
+    <div class="stage canvas"><div class="menu" data-insp="menu">
+      <div class="menu-item sl"><svg class="ico"><use href="#i-qr"/></svg>Show QR code</div>
+      <div class="menu-item sl"><svg class="ico"><use href="#i-download"/></svg>Export PDF</div>
+      <div class="menu-item sl"><svg class="ico"><use href="#i-edit"/></svg>Edit seller note</div>
+      <hr class="divider" style="margin:8px 0">
+      <div class="menu-item danger sl"><svg class="ico"><use href="#i-trash"/></svg>Delete report</div>
+    </div></div></section>
+
+  <!-- ================= SELECTION ================= -->
+  <div class="cat">Selection</div>
+  <section id="checkbox"><h2 class="sec">Checkbox</h2>
+    <p class="sec-desc">Used in the "what I can see" checks the seller confirms.</p>
+    <div class="stage">
+      <div class="cell"><span class="checkbox sl" data-insp="checkbox"><span class="box"></span></span><div class="spec">unchecked</div></div>
+      <div class="cell"><span class="checkbox checked sl" data-insp="checkbox"><span class="box"><svg class="ico i-check"><use href="#i-check"/></svg></span></span><div class="spec">checked</div></div>
+      <div class="cell"><span class="checkbox indeterminate sl" data-insp="checkbox"><span class="box"><svg class="ico i-minus"><use href="#i-minus"/></svg></span></span><div class="spec">indeterminate</div></div>
+      <div class="cell"><span class="checkbox error sl" data-insp="checkbox"><span class="box"></span></span><div class="spec">error</div></div>
+      <div class="cell"><span class="checkbox checked is-disabled" data-insp="checkbox"><span class="box"><svg class="ico i-check"><use href="#i-check"/></svg></span></span><div class="spec">disabled</div></div>
+      <div class="cell"><div class="row"><span class="checkbox checked sl"><span class="box"><svg class="ico i-check"><use href="#i-check"/></svg></span></span><span class="body-m">No dead pixels on white</span></div><div class="spec">with label</div></div>
+    </div></section>
+
+  <section id="chip"><h2 class="sec">Chips</h2>
+    <p class="sec-desc">Bubble chips (borrowed shape). Status chips carry colour as meaning, always with an icon and a word.</p>
+    <div class="stage">
+      <div class="cell"><span class="chip chip-assist sl" data-insp="chip"><svg class="ico"><use href="#i-help"/></svg>How signing works</span><div class="spec">assist</div></div>
+      <div class="cell"><span class="chip chip-filter sl" data-insp="chip">Cameras</span><div class="spec">filter</div></div>
+      <div class="cell"><span class="chip chip-filter selected sl" data-insp="chip"><svg class="ico"><use href="#i-check"/></svg>Issues only</span><div class="spec">filter · selected</div></div>
+      <div class="cell"><span class="chip chip-input sl" data-insp="chip">IMEI 35··· 5185<span class="x"><svg class="ico"><use href="#i-close"/></svg></span></span><div class="spec">input</div></div>
+      <div class="cell"><span class="chip chip-suggestion sl" data-insp="chip">Is the battery original?</span><div class="spec">suggestion</div></div>
+      <div class="cell"><span class="chip chip-filter is-disabled" data-insp="chip">Radios</span><div class="spec">disabled</div></div>
+    </div>
+    <div class="stage">
+      <div class="cell"><span class="chip chip-status pass" data-insp="chip"><svg class="ico"><use href="#i-check"/></svg>Passed</span><div class="spec">status · pass</div></div>
+      <div class="cell"><span class="chip chip-status warn" data-insp="chip"><svg class="ico"><use href="#i-alert"/></svg>Check this</span><div class="spec">status · warn</div></div>
+      <div class="cell"><span class="chip chip-status fail" data-insp="chip"><svg class="ico"><use href="#i-close"/></svg>Failed</span><div class="spec">status · fail</div></div>
+      <div class="cell"><span class="chip chip-status none" data-insp="chip"><svg class="ico"><use href="#i-minus"/></svg>Not tested</span><div class="spec">status · not tested</div></div>
+    </div></section>
+
+  <section id="radio"><h2 class="sec">Radio button</h2>
+    <p class="sec-desc">One choice from a short list.</p>
+    <div class="stage">
+      <div class="cell"><span class="radio sl" data-insp="radio"><span class="dot"></span></span><div class="spec">unselected</div></div>
+      <div class="cell"><span class="radio checked sl" data-insp="radio"><span class="dot"></span></span><div class="spec">selected</div></div>
+      <div class="cell"><span class="radio checked is-disabled" data-insp="radio"><span class="dot"></span></span><div class="spec">disabled</div></div>
+      <div class="cell start"><div class="stack" style="gap:0"><div class="row"><span class="radio checked sl"><span class="dot"></span></span><span class="body-m">Front camera worked</span></div><div class="row"><span class="radio sl"><span class="dot"></span></span><span class="body-m">Image was black or blurry</span></div></div><div class="spec">with labels</div></div>
+    </div></section>
+
+  <section id="switch"><h2 class="sec">Switch</h2>
+    <p class="sec-desc">Settings that apply immediately.</p>
+    <div class="stage">
+      <div class="cell"><span class="switch" data-insp="switch"></span><div class="spec">off</div></div>
+      <div class="cell"><span class="switch on" data-insp="switch"></span><div class="spec">on</div></div>
+      <div class="cell"><span class="switch on is-disabled" data-insp="switch"></span><div class="spec">disabled</div></div>
+      <div class="cell"><div class="row" style="gap:16px;width:300px"><div style="flex:1"><div class="body-m">Include photos in report</div><div class="body-s">Only their fingerprints are uploaded</div></div><span class="switch on"></span></div><div class="spec">in a row</div></div>
+    </div></section>
+
+  <section id="slider"><h2 class="sec">Slider</h2>
+    <p class="sec-desc">Continuous, discrete and range.</p>
+    <div class="stage" style="gap:48px;padding-top:48px">
+      <div class="cell start"><div class="slider" data-insp="slider"><div class="track"></div><div class="active" style="width:62%"></div><div class="thumb" style="left:62%"></div></div><div class="spec">continuous · speaker volume</div></div>
+      <div class="cell start"><div class="slider" data-insp="slider"><div class="track"></div><div class="active" style="width:50%"></div><span class="tick on" style="left:12%"></span><span class="tick on" style="left:25%"></span><span class="tick on" style="left:37%"></span><span class="tick" style="left:62%"></span><span class="tick" style="left:75%"></span><span class="tick" style="left:87%"></span><div class="thumb" style="left:50%"><span class="val num" style="left:2px">4</span></div></div><div class="spec">discrete · value label</div></div>
+      <div class="cell start"><div class="slider" data-insp="slider"><div class="track"></div><div class="active" style="left:25%;width:45%"></div><div class="thumb" style="left:25%"></div><div class="thumb" style="left:70%"></div></div><div class="spec">range</div></div>
+    </div></section>
+
+  <section id="datepicker"><h2 class="sec">Date picker</h2>
+    <p class="sec-desc">Filters report history by date. Not yet used.</p>
+    <div class="stage canvas"><div class="datepicker" data-insp="datepicker">
+      <div class="dp-head"><div class="dp-sup">Select date</div><div class="dp-big">Sat, 24 Oct</div></div>
+      <div class="dp-month"><span>October 2026</span><span class="row" style="gap:0"><span class="iconbtn sl"><svg class="ico"><use href="#i-chevron-left"/></svg></span><span class="iconbtn sl"><svg class="ico"><use href="#i-chevron-right"/></svg></span></span></div>
+      <div class="dp-grid" id="dpGrid"></div>
+      <div class="picker-actions"><div class="btn btn-text sl">Cancel</div><div class="btn btn-text sl">OK</div></div>
+    </div></div></section>
+
+  <section id="timepicker"><h2 class="sec">Time picker</h2>
+    <p class="sec-desc">Schedules a reminder to re-test before a meet-up. Not yet used.</p>
+    <div class="stage canvas"><div class="timepicker" data-insp="timepicker">
+      <div class="tp-sup">Remind me at</div>
+      <div class="tp-row"><div class="tp-cell sel num">06</div><span class="tp-colon">:</span><div class="tp-cell num">30</div><div class="tp-ampm"><div>AM</div><div class="sel">PM</div></div></div>
+      <div class="picker-actions" style="margin-top:20px"><div class="btn btn-text sl">Cancel</div><div class="btn btn-text sl">OK</div></div>
+    </div></div></section>
+
+  <!-- ================= TEXT INPUTS ================= -->
+  <div class="cat">Text inputs</div>
+  <section id="textfield"><h2 class="sec">Text field</h2>
+    <p class="sec-desc">Outlined is the default (on white cards). Errors sit directly under the field that failed.</p>
+    <div class="stage" id="fieldMatrix"></div></section>
+
+  <!-- ================= EXTENSIONS ================= -->
+  <div class="cat">Extensions · PhoneProof</div>
+  <section id="verdict"><h2 class="sec">Verdict block</h2>
+    <p class="sec-desc">The signature of the system: one full-width colour block per screen saying the result in plain words. Never two on one screen; everything around it stays quiet.</p>
+    <div class="stage canvas" style="align-items:stretch">
+      <div class="verdict pass" data-insp="verdict" style="width:300px"><span class="v-seal"><svg class="ico"><use href="#i-shield-check"/></svg></span><span class="v-kicker"><svg class="ico ico--sm"><use href="#i-shield-check"/></svg>SIGNED BY THIS PHONE</span><span class="v-title">Genuine report</span><span class="v-body">Made by the real PhoneProof app on an unmodified phone. Nothing was changed after signing.</span></div>
+      <div class="verdict warn" data-insp="verdict" style="width:300px"><span class="v-kicker"><svg class="ico ico--sm"><use href="#i-alert"/></svg>CHECK BEFORE YOU PAY</span><span class="v-title">2 issues found</span><span class="v-body">The microphone was quiet and GPS was not tested. Ask the seller to show you.</span></div>
+      <div class="verdict fail" data-insp="verdict" style="width:300px"><span class="v-kicker"><svg class="ico ico--sm"><use href="#i-shield-alert"/></svg>DON'T TRUST THIS REPORT</span><span class="v-title">Report was changed</span><span class="v-body">The contents don't match the phone's signature. Someone edited it after the test.</span></div>
+      <div class="verdict none" data-insp="verdict" style="width:300px"><span class="v-kicker"><svg class="ico ico--sm"><use href="#i-clock"/></svg>WAITING</span><span class="v-title">Scan the seller's code</span><span class="v-body">Point your camera at the QR on the seller's screen.</span></div>
+    </div></section>
+
+  <section id="disc"><h2 class="sec">Status disc</h2>
+    <p class="sec-desc">Colour, glyph and an accessible label together, so the meaning never relies on colour alone.</p>
+    <div class="stage">
+      <div class="cell"><span class="disc pass" data-insp="disc" role="img" aria-label="Passed"><svg class="ico"><use href="#i-check"/></svg></span><div class="spec">pass</div></div>
+      <div class="cell"><span class="disc warn" data-insp="disc" role="img" aria-label="Warning"><svg class="ico"><use href="#i-alert"/></svg></span><div class="spec">warn</div></div>
+      <div class="cell"><span class="disc fail" data-insp="disc" role="img" aria-label="Failed"><svg class="ico"><use href="#i-close"/></svg></span><div class="spec">fail</div></div>
+      <div class="cell"><span class="disc none" data-insp="disc" role="img" aria-label="Not tested"><svg class="ico"><use href="#i-minus"/></svg></span><div class="spec">not tested</div></div>
+      <div class="cell"><span class="disc disc-lg pass" data-insp="disc" role="img" aria-label="Passed"><svg class="ico"><use href="#i-check"/></svg></span><div class="spec">large</div></div>
+    </div></section>
+
+  <section id="testrow"><h2 class="sec">Test row</h2>
+    <p class="sec-desc">A list item with a status disc, the test name, who decided (device or seller) and a tabular value.</p>
+    <div class="stage canvas"><div class="list" data-insp="testrow" style="width:380px">
+      <div class="li li-2line sl"><span class="disc pass"><svg class="ico"><use href="#i-check"/></svg></span><div class="li-text"><div class="li-headline">Battery health</div><div class="li-supporting">Measured by the phone · 312 cycles</div></div><span class="li-trail title-m num">91%</span></div>
+      <hr class="divider divider-inset">
+      <div class="li li-2line sl"><span class="disc warn"><svg class="ico"><use href="#i-alert"/></svg></span><div class="li-text"><div class="li-headline">Microphone</div><div class="li-supporting">Measured · quieter than usual</div></div></div>
+      <hr class="divider divider-inset">
+      <div class="li li-2line sl"><span class="disc pass"><svg class="ico"><use href="#i-check"/></svg></span><div class="li-text"><div class="li-headline">Dead pixels</div><div class="li-supporting">Confirmed by the seller</div></div></div>
+      <hr class="divider divider-inset">
+      <div class="li li-2line sl"><span class="disc none"><svg class="ico"><use href="#i-minus"/></svg></span><div class="li-text"><div class="li-headline">GPS</div><div class="li-supporting">Skipped by the seller</div></div></div>
+    </div></div></section>
+
+  <section id="stepbar"><h2 class="sec">Wizard step bar</h2>
+    <p class="sec-desc">Segmented progress for the test wizard: one segment per test, so "Test 4 of 12" is visible at a glance.</p>
+    <div class="stage" style="display:block" data-insp="stepbar"><div class="row" style="justify-content:space-between;margin-bottom:12px"><span class="label-l">Test 4 of 12</span><span class="label-m muted num">about 2 min left</span></div>
+      <div class="stepbar"><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></section>
+
+  <section id="stat"><h2 class="sec">Stat</h2>
+    <p class="sec-desc">A big tabular number with a short label, for the report summary row.</p>
+    <div class="stage">
+      <div class="stat" data-insp="stat"><span class="s-num" style="color:var(--success)">13</span><span class="s-lbl">Passed</span></div>
+      <div class="stat" data-insp="stat"><span class="s-num" style="color:var(--warning)">1</span><span class="s-lbl">Check this</span></div>
+      <div class="stat" data-insp="stat"><span class="s-num" style="color:var(--on-surface-variant)">1</span><span class="s-lbl">Not tested</span></div>
+    </div></section>
+</main>
+
+<script>
+const cs=getComputedStyle(document.documentElement);
+const cv=n=>cs.getPropertyValue('--'+n).trim();
+
+/* ===== Foundations ===== */
+const COLOR_GROUPS=[
+ ['Primary',[['primary','on-primary'],['primary-container','on-primary-container'],['primary-strong','on-primary']]],
+ ['Secondary · Tertiary',[['secondary','on-secondary'],['secondary-container','on-secondary-container'],['tertiary','on-tertiary'],['tertiary-container','on-tertiary-container']]],
+ ['Status · colour as meaning',[['success','on-success'],['success-container','on-success-container'],['warning','on-warning'],['warning-container','on-warning-container'],['error','on-error'],['error-container','on-error-container'],['untested','on-untested'],['untested-container','on-untested-container']]],
+ ['Surfaces',[['background','on-background'],['surface-container-lowest','on-surface'],['surface-container-low','on-surface'],['surface-container','on-surface'],['surface-container-high','on-surface'],['surface-container-highest','on-surface'],['surface-variant','on-surface-variant']]],
+ ['Lines · Inverse',[['outline',null],['outline-variant',null],['inverse-surface','inverse-on-surface'],['inverse-surface','inverse-primary']]]];
+function lum(h){const c=h.replace('#','').match(/../g).map(x=>parseInt(x,16)/255).map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4));return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+function ratio(a,b){const x=[lum(a),lum(b)].sort((p,q)=>q-p);return ((x[0]+.05)/(x[1]+.05)).toFixed(2);}
+colorGrid.innerHTML=COLOR_GROUPS.map(([g,ps])=>`<div class="cgrp">${g}</div><div class="colors">`+ps.map(([f,o])=>{const fv=cv(f),ov=o?cv(o):null;
+ return `<div class="sw"><div class="c" style="background:${fv};color:${ov||'transparent'}">${o?'Aa '+ratio(fv,ov):''}</div><div class="m"><div class="n">${f}${o?' / '+o:''}</div><div class="v">${fv}${ov?' · '+ov:''}</div></div></div>`;}).join('')+`</div>`).join('');
+
+const TYPE=[['display-l','800 / 52 / 56','Genuine report'],['display-m','800 / 44 / 48','Genuine report'],['display-s','800 / 36 / 42','Check this phone'],['headline-l','800 / 32 / 38','2 issues found'],['headline-m','800 / 28 / 34','Tap every square'],['headline-s','800 / 24 / 30','Say “hello” to the mic'],
+ ['title-l','700 / 22 / 28','Pixel 7 · 128 GB'],['title-m','700 / 18 / 24','Battery health'],['title-s','700 / 15 / 20','Measured by the phone'],['body-l','400 / 17 / 26','Made by the real PhoneProof app on an unmodified phone. Nothing was changed after signing.'],
+ ['body-m','400 / 15 / 22','Most replacement screens can’t be detected by software. Ask for repair receipts.'],['body-s','400 / 13 / 18','24 Oct 2026, 18:42 · 13 of 15 passed'],['label-l','700 / 15 / 20','Share report'],['label-m','700 / 13 / 16','SIGNED BY THIS PHONE'],['label-s','700 / 11 / 14','NOT TESTED']];
+typeList.innerHTML=TYPE.map(([n,m,s])=>`<div class="typerow"><div class="tk">${n}<br>${m}</div><div class="${n}">${s}</div></div>`).join('');
+
+shapeList.innerHTML=[['none','r-none'],['extra-small','r-xs'],['small','r-sm'],['medium','r-md'],['large','r-lg'],['extra-large','r-xl'],['full','r-full']].map(([n,t])=>`<div class="shape" style="border-radius:var(--${t})">${n}<br>${cv(t)}</div>`).join('');
+elevList.innerHTML=[['0','canvas'],['1','card · tonal'],['2','menu, elevated card'],['3','FAB, snackbar'],['4','bottom sheet'],['5','dialog']].map(([n,u])=>`<div class="elev" style="box-shadow:var(--elev-${n})${n==='0'?';background:transparent;border:1px dashed var(--outline-variant)':''}">Level ${n}<span>${u}</span></div>`).join('');
+
+const SPACING=[['sp-2'],['sp-4'],['sp-8','gap-related'],['sp-12'],['sp-16'],['sp-20','layout-gutter'],['sp-24','gap-section'],['sp-32'],['sp-40','gap-major'],['sp-48','target-min'],['sp-64']];
+spacingList.innerHTML=SPACING.map(([n,r])=>{const v=parseInt(cv(n));return `<div class="sprow"><div class="lbl">${n} · ${v}${r?' · '+r:''}</div><div class="bar" style="width:${v*4}px"></div></div>`;}).join('');
+motionList.innerHTML=[['ease','standard'],['ease-emph-dec','emphasized decelerate · enter'],['ease-emph-acc','emphasized accelerate · exit'],['ease-spring','switch thumb'],['dur-fast','state layer'],['dur-base','component change'],['dur-slow','screen / sheet']].map(([n,u])=>`<div class="sprow"><div class="lbl">--${n}</div><span class="spec">${cv(n)} · ${u}</span></div>`).join('');
+
+const ICONS=[...document.querySelectorAll('symbol')].map(s=>s.id.slice(2));
+iconGrid.innerHTML=ICONS.map(n=>`<div class="it"><svg class="ico ico--lg"><use href="#i-${n}"/></svg><div class="nm">i-${n}</div></div>`).join('');
+
+/* button matrix: variants × states */
+const BV=[['filled','Share report'],['tonal','Copy link'],['elevated','Meet-up mode'],['outlined','View QR'],['text','Skip test']];
+const BS=[['','enabled'],['is-hover','hover'],['is-focus','focus'],['is-pressed','pressed'],['is-disabled','disabled']];
+btnMatrix.style.display='grid';btnMatrix.style.gridTemplateColumns='110px repeat(5,1fr)';btnMatrix.style.gap='14px 16px';btnMatrix.style.alignItems='center';
+btnMatrix.innerHTML='<span></span>'+BS.map(s=>`<span class="spec">${s[1]}</span>`).join('')+BV.map(([v,l])=>`<span class="spec">${v}</span>`+BS.map(([c])=>`<div><div class="btn btn-${v} ${c==='is-disabled'?c:'sl '+c}" data-insp="button">${l}</div></div>`).join('')).join('');
+
+/* text field matrix */
+const FS=[['','empty','Model name',''],['is-focused has-value','focused','Model name','Pixel 7<span class="caret"></span>'],['has-value','filled','Model name','Pixel 7'],['is-error has-value','error','IMEI','35 209 8XX'],['is-disabled has-value','disabled','Model name','Pixel 7']];
+function field(kind,[c,st,lbl,val]){const err=c.includes('is-error');const help=err?'IMEI must be 15 digits':st==='focused'?'As shown in Settings › About':'';
+ const lead=lbl==='IMEI'?'<svg class="ico"><use href="#i-smartphone"/></svg>':'';const trail=err?'<span class="f-trail"><svg class="ico"><use href="#i-alert"/></svg></span>':(c.includes('has-value')&&!c.includes('disabled')?'<span class="iconbtn sl" aria-label="Clear"><svg class="ico"><use href="#i-close"/></svg></span>':'');
+ return `<div class="cell start"><div class="field field-${kind} ${c} ${lbl==='IMEI'?'mono':''}" data-insp="textfield"><div class="f-box">${lead}<div class="f-in"><span class="f-label">${lbl}</span>${val?`<span class="f-value">${val}</span>`:''}</div>${trail}</div>${help?`<div class="f-help">${help}</div>`:''}</div><div class="spec">${kind} · ${st}</div></div>`;}
+fieldMatrix.innerHTML=FS.map(s=>field('outlined',s)).join('')+FS.map(s=>field('filled',s)).join('');
+
+/* date grid */
+(function(){let h=['M','T','W','T','F','S','S'].map(d=>`<div class="wk">${d}</div>`).join('');const start=3;
+ for(let i=0;i<start;i++)h+=`<div><div class="d out">${28+i}</div></div>`;for(let d=1;d<=31;d++){const c=d===24?'sel':d===25?'today':'';h+=`<div><div class="d sl ${c}">${d}</div></div>`;}dpGrid.innerHTML=h;})();
+
+/* ===== SPECS: one per component. Tokens are [role, tokenName]; values resolve live from styles.css ===== */
+const F='app/src/main/java/app/phoneproof/ui/components/';
+const S=(name,file,desc,props,tokens,metrics)=>({name,file:F+file,desc,props:props.map(p=>({n:p[0],t:p[1],def:p[2]})),tokens:tokens.map(([r,n])=>{const v=cv(n);return {r,n,v:v||n,c:/^#|^rgb/.test(v)?v:null};}),metrics});
+const SPECS={
+ button:S('Button','Buttons.kt','Common button. Pill shape. Variants filled / filled-tonal / elevated / outlined / text, plus danger for destructive dialog actions. States: enabled, hover, focus (2px ring), pressed, disabled. Use filled for the ONE primary action per screen (large size 56).',
+  [['label','String'],['onClick','() -> Unit'],['variant','Filled|Tonal|Elevated|Outlined|Text|Danger','Filled'],['size','Medium|Large','Medium'],['leadingIcon','Icon?','null'],['enabled','Boolean','true']],
+  [['filled container','primary'],['filled label','on-primary'],['pressed container','primary-strong'],['tonal container','secondary-container'],['tonal label','on-secondary-container'],['outline','outline'],['text/outlined label','primary-ink'],['danger container','error'],['shape','r-full'],['focus ring','ring']],
+  [['height','48 (large 56)'],['padding','h 24 (large 32, text 12)'],['icon','18, gap 8'],['label','700 / 15 (large 17)'],['disabled','content .38 · container .12']]),
+ iconbutton:S('IconButton','IconButtons.kt','Icon-only action. Standard / filled / tonal / outlined, each with optional toggle (selected/unselected). Always has a contentDescription.',
+  [['icon','ImageVector'],['contentDescription','String'],['variant','Standard|Filled|Tonal|Outlined','Standard'],['checked','Boolean?','null'],['onClick','() -> Unit']],
+  [['standard icon','on-surface-variant'],['filled container','primary'],['tonal container','secondary-container'],['unselected container','surface-container-highest'],['outlined border','outline'],['outlined selected','inverse-surface']],
+  [['target','48 × 48'],['glyph','24'],['shape','full']]),
+ fab:S('FloatingActionButton','Fab.kt','Floating action. Small 40 / regular 56 / large 96 / extended with label. Primary-container colours, elevation level 3.',
+  [['icon','ImageVector'],['text','String?','null'],['size','Small|Regular|Large','Regular'],['onClick','() -> Unit']],
+  [['container','primary-container'],['content','on-primary-container'],['elevation','elev-3']],
+  [['small','40, radius 12'],['regular','56, radius 20'],['large','96, radius 32, icon 36'],['extended','h 56, padding h 20']]),
+ segmented:S('SegmentedButton','SegmentedButtons.kt','2–5 related options, single or multi-select. Selected segments use secondary-container and show a check icon.',
+  [['options','List<String>'],['selected','Set<Int>'],['multiSelect','Boolean','false'],['onChange','(Set<Int>) -> Unit']],
+  [['border','outline'],['selected container','secondary-container'],['selected label','on-secondary-container'],['label','on-surface']],
+  [['height','40'],['padding','h 16'],['shape','full (outer)']]),
+ badge:S('Badge','Badge.kt','Small dot (new) or large number (count, max 99+). Sits top-right of an icon.',
+  [['count','Int?','null (dot)'],['max','Int','99']],[['container','error'],['number','on-error']],[['dot','8'],['large','min 18 × 18, type 800 / 11']]),
+ progress:S('ProgressIndicator','Progress.kt','Linear (8 tall, rounded) and circular (48). Determinate or indeterminate. Indeterminate animation stops under reduced motion.',
+  [['progress','Float?','null = indeterminate'],['type','Linear|Circular','Linear']],[['indicator','primary'],['track','surface-container-highest']],[['linear height','8, radius full'],['circular','48, stroke 5, round cap']]),
+ snackbar:S('Snackbar','Snackbar.kt','Brief message at the bottom with one optional action (e.g. Undo).',
+  [['message','String'],['actionLabel','String?','null'],['onAction','() -> Unit']],[['container','inverse-surface'],['text','inverse-on-surface'],['action','inverse-primary'],['elevation','elev-3']],[['min height','48'],['radius','12'],['max width','360']]),
+ tooltip:S('Tooltip','Tooltip.kt','Plain tooltip labels an icon; rich tooltip explains a term (title, body, optional action).',
+  [['text','String'],['title','String?','null (plain)'],['action','String?','null']],[['plain container','inverse-surface'],['plain text','inverse-on-surface'],['rich container','surface-container-lowest'],['rich body','on-surface-variant'],['rich action','primary-ink']],[['plain','padding 4×8, radius 8'],['rich','max 300, padding 12×16, radius 12, elev 2']]),
+ card:S('Card','Cards.kt','Surface container. Filled = white on the grey canvas (default, tonal, no shadow). Elevated only when it floats over content. Outlined for secondary groups. Never border + shadow together.',
+  [['variant','Filled|Elevated|Outlined','Filled'],['onClick','(() -> Unit)?','null'],['content','@Composable ColumnScope.() -> Unit']],
+  [['filled container','surface-container-lowest'],['canvas behind','background'],['elevated shadow','elev-2'],['outlined border','outline-variant'],['shape','r-lg']],
+  [['radius','32'],['padding','20'],['gap','8 related / 24 between groups']]),
+ carousel:S('Carousel','Carousel.kt','Multi-browse carousel for condition photos. Items snap; the last item peeks to show more.',
+  [['items','List<Photo>'],['onItemClick','(Int) -> Unit']],[['item placeholder','surface-container-high'],['shape','r-md']],[['item','220 × 160 (shrinks to 56)'],['gap','8']]),
+ divider:S('Divider','Divider.kt','1dp hairline. Full, inset (72 from start, after a leading element) or middle-inset. Prefer spacing over dividers outside lists.',
+  [['inset','None|Start|Middle','None']],[['color','outline-variant']],[['thickness','1']]),
+ list:S('ListItem','ListItem.kt','One-line (56), two-line (72) and three-line (88) items with leading (icon, avatar, disc) and trailing (icon, value, chip) slots. Lists sit in a white large-radius container.',
+  [['headline','String'],['supporting','String?','null'],['overline','String?','null'],['leading','@Composable?','null'],['trailing','@Composable?','null'],['onClick','(() -> Unit)?','null']],
+  [['container','surface-container-lowest'],['headline','on-surface'],['supporting','on-surface-variant'],['avatar','primary-container']],
+  [['1-line','min 56'],['2-line','min 72'],['3-line','min 88, supporting 2 lines max'],['padding','h 16, gap 16'],['headline','700 / 16'],['supporting','400 / 14']]),
+ sheet:S('BottomSheet','BottomSheet.kt','Standard (beside content) or modal (with scrim). Drag handle on top. Used for share options.',
+  [['modal','Boolean','true'],['onDismiss','() -> Unit'],['content','@Composable ColumnScope.() -> Unit']],
+  [['container','surface-container-lowest'],['handle','outline'],['scrim','scrim'],['modal elevation','elev-4']],[['top radius','32'],['handle','32 × 4'],['padding','h 20, bottom 24']]),
+ dialog:S('Dialog','Dialogs.kt','Basic dialog (icon, title, body, actions) for destructive or irreversible actions; full-screen dialog for a short form.',
+  [['title','String'],['text','String'],['icon','ImageVector?','null'],['confirm','Action'],['dismiss','Action?'],['fullScreen','Boolean','false']],
+  [['container','surface-container-lowest'],['title','on-surface'],['body','on-surface-variant'],['icon','primary-ink'],['destructive confirm','error'],['elevation','elev-5']],
+  [['radius','32'],['padding','24'],['max width','320'],['title','800 / 24, centred when icon']]),
+ topbar:S('TopAppBar','TopAppBar.kt','Center-aligned / small / medium (112) / large (152). Medium and large hold the page title; it collapses to small on scroll (container changes to surface-container).',
+  [['title','String'],['size','Center|Small|Medium|Large','Small'],['navigationIcon','@Composable?'],['actions','@Composable RowScope.()'],['scrollBehavior','TopAppBarScrollBehavior?']],
+  [['container','background'],['scrolled container','surface-container'],['title','on-surface']],[['small/center','64'],['medium','112, title 800 / 26'],['large','152, title 800 / 32'],['icons','48 targets']]),
+ navbar:S('NavigationBar','NavigationBar.kt','Bottom navigation, 3 destinations (Home, Reports, Verify). Active indicator pill in secondary-container.',
+  [['items','List<NavItem>'],['selected','Int'],['onSelect','(Int) -> Unit']],[['container','surface-container-lowest'],['top border','outline-variant'],['indicator','secondary-container'],['active icon','on-secondary-container'],['inactive','on-surface-variant']],[['height','80'],['indicator','64 × 32, full'],['label','700 / 12']]),
+ navrail:S('NavigationRail','NavigationRail.kt','Vertical navigation for tablets/foldables with optional FAB on top. Not yet used on phones.',
+  [['items','List<NavItem>'],['selected','Int'],['header','@Composable?']],[['container','surface-container-lowest'],['indicator','secondary-container']],[['width','80'],['gap','12']]),
+ drawer:S('NavigationDrawer','NavigationDrawer.kt','Standard (persistent) or modal (with scrim). Selected item is a full pill in secondary-container.',
+  [['items','List<NavItem>'],['selected','Int'],['modal','Boolean','true']],[['container','surface-container-lowest'],['selected item','secondary-container'],['scrim','scrim'],['modal elevation','elev-5']],[['width','300'],['item height','56, full radius'],['end radius','32']]),
+ tabs:S('Tabs','Tabs.kt','Primary tabs (top-level, optional icons, short 48 × 3 indicator) and secondary tabs (filters, full-width 2px indicator). Fixed or scrollable.',
+  [['tabs','List<String>'],['selected','Int'],['type','Primary|Secondary','Primary'],['scrollable','Boolean','false']],[['selected (primary)','primary-ink'],['indicator','primary'],['unselected','on-surface-variant'],['divider','outline-variant']],[['height','48 (with icon 64)'],['primary indicator','48 × 3'],['secondary indicator','full × 2']]),
+ search:S('Search','Search.kt','Search bar (pill, 56) that expands into a full search view with history suggestions.',
+  [['query','String'],['onQueryChange','(String) -> Unit'],['active','Boolean'],['placeholder','String']],[['container','surface-container-lowest'],['placeholder','on-surface-variant'],['divider','outline-variant']],[['bar height','56, full radius'],['view header','64']]),
+ menu:S('DropdownMenu','Menu.kt','Overflow menu. Items 48 tall with leading icon; destructive item last, in error colour, after a divider.',
+  [['items','List<MenuItem>'],['expanded','Boolean'],['onDismiss','() -> Unit']],[['container','surface-container-lowest'],['item','on-surface'],['icon','on-surface-variant'],['destructive','error'],['elevation','elev-2']],[['min width','200'],['item','48'],['radius','12']]),
+ checkbox:S('Checkbox','Checkbox.kt','Unchecked / checked / indeterminate / error / disabled. 20 box in a 48 target.',
+  [['state','Off|On|Indeterminate'],['onChange','(Boolean) -> Unit'],['isError','Boolean','false'],['enabled','Boolean','true']],[['checked fill','primary'],['check','on-primary'],['border','on-surface-variant'],['error','error']],[['box','20, radius 6, border 2'],['target','48']]),
+ chip:S('Chip','Chips.kt','Assist, filter (selected = tonal + check), input (removable), suggestion. Plus status chips: pass / warn / fail / not tested, always icon + word.',
+  [['label','String'],['type','Assist|Filter|Input|Suggestion|Status'],['selected','Boolean','false'],['status','Pass|Warn|Fail|None?'],['onClick','() -> Unit']],
+  [['container','surface-container-lowest'],['border','outline-variant'],['selected','secondary-container'],['pass','success-container'],['warn','warning-container'],['fail','error-container'],['not tested','untested-container']],[['height','36 (status 32)'],['shape','full (input 12)'],['padding','h 16'],['icon','18']]),
+ radio:S('RadioButton','RadioButton.kt','One choice from a list. 20 ring, 10 dot, 48 target.',
+  [['selected','Boolean'],['onClick','() -> Unit'],['enabled','Boolean','true']],[['selected','primary'],['unselected','on-surface-variant']],[['ring','20, border 2'],['dot','10'],['target','48']]),
+ switch:S('Switch','Switch.kt','On/off for settings that apply immediately. Thumb grows when on; spring easing.',
+  [['checked','Boolean'],['onChange','(Boolean) -> Unit'],['enabled','Boolean','true']],[['on track','primary'],['on thumb','on-primary'],['off track','surface-container-highest'],['off border/thumb','outline']],[['track','52 × 32'],['thumb','16 off / 24 on'],['motion','dur-base · ease-spring']]),
+ slider:S('Slider','Slider.kt','Continuous, discrete (ticks + value label) and range. 16 tall track, 4 × 44 handle.',
+  [['value','Float or ClosedRange'],['steps','Int','0'],['onChange','(Float) -> Unit']],[['active','primary'],['inactive','secondary-container'],['value label','inverse-surface']],[['track','16, full'],['handle','4 × 44'],['ticks','4']]),
+ datepicker:S('DatePicker','DatePicker.kt','Modal calendar. Today is outlined; selected is a filled circle.',
+  [['selectedDate','LocalDate?'],['onConfirm','(LocalDate) -> Unit']],[['container','surface-container-lowest'],['selected','primary'],['today ring','primary'],['weekday','on-surface-variant']],[['width','328'],['day','40, full'],['radius','32']]),
+ timepicker:S('TimePicker','TimePicker.kt','Input-style time picker with AM/PM.',
+  [['hour','Int'],['minute','Int'],['is24h','Boolean','false']],[['selected field','primary-container'],['field','surface-container-highest'],['period selected','tertiary-container']],[['field','96 × 80, 800 / 48'],['radius','32']]),
+ textfield:S('TextField','TextField.kt','Outlined (default, on white) and filled. States: empty, focused, filled, error, disabled. Label, helper/error text, leading and trailing icons. Error text sits right under the field.',
+  [['value','String'],['onChange','(String) -> Unit'],['label','String'],['supportingText','String?'],['isError','Boolean','false'],['leadingIcon','@Composable?'],['trailingIcon','@Composable?'],['variant','Outlined|Filled','Outlined']],
+  [['outline','outline'],['focused','primary'],['label','on-surface-variant'],['error','error'],['filled container','surface-container-highest']],[['height','56'],['outlined radius','12'],['filled radius','8 top'],['focused border','2 (filled 3 bottom)']]),
+ verdict:S('VerdictBlock','VerdictBlock.kt','THE signature component: one full-width colour block per screen stating the result in plain words (kicker, title, body). Pass / warn / fail / waiting. Never two on one screen; neighbours stay quiet. Can bleed to the screen top (bottom corners rounded only).',
+  [['status','Pass|Warn|Fail|None'],['kicker','String'],['title','String'],['body','String'],['bleedTop','Boolean','false']],
+  [['pass','success'],['on pass','on-success'],['warn','warning'],['fail','error'],['waiting','untested'],['shape','r-lg']],[['padding','24'],['kicker','700 / 13 + icon 18'],['title','800 / 32'],['body','400 / 15'],['seal','144 ring at 22% opacity, top-right']]),
+ disc:S('StatusDisc','StatusDisc.kt','Round status mark: colour + glyph + contentDescription, so meaning never relies on colour alone.',
+  [['status','Pass|Warn|Fail|None'],['size','Regular|Large','Regular']],[['pass','success'],['warn','warning'],['fail','error'],['none','untested-container']],[['regular','32, glyph 18'],['large','56, glyph 28']]),
+ testrow:S('TestRow','TestRow.kt','Two-line list item for one test: status disc, test name, who decided (measured by the phone / confirmed by the seller / skipped), and an optional tabular value.',
+  [['name','String'],['status','Pass|Warn|Fail|None'],['source','Device|Seller|Skipped'],['detail','String?'],['value','String?']],[['headline','on-surface'],['supporting','on-surface-variant'],['value','on-surface']],[['height','min 72'],['value','700 / 18, tabular']]),
+ stepbar:S('WizardStepBar','WizardStepBar.kt','Segmented progress for the test wizard: one segment per test, done / current (45%) / upcoming, with "Test n of N" and time left.',
+  [['total','Int'],['current','Int'],['label','String']],[['done','primary'],['upcoming','surface-container-highest']],[['segment','6 tall, gap 4, full radius']]),
+ stat:S('Stat','Stat.kt','Big tabular number + short label for the report summary row. Number colour follows the status it counts.',
+  [['value','Int'],['label','String'],['status','Pass|Warn|Fail|None']],[['label','on-surface-variant'],['pass number','success'],['warn number','warning']],[['number','800 / 28, tabular'],['label','700 / 12']]),
+};
+
+/* ===== Copy-as-prompt: Jetpack Compose first (the user's framework) ===== */
+const LANGS=['Jetpack Compose (Kotlin)','Flutter (Dart)','React (TypeScript + CSS)','SwiftUI','React Native','HTML + CSS'];
+let promptLang=LANGS[0];
+langSel.innerHTML=LANGS.map(l=>`<option${l===promptLang?' selected':''}>${l}</option>`).join('');
+langSel.onchange=()=>promptLang=langSel.value;
+const varGroups={
+ 'Color roles (keep every fill paired with its --on-*)':['--primary','--on-primary','--primary-container','--on-primary-container','--primary-strong','--primary-ink','--secondary','--on-secondary','--secondary-container','--on-secondary-container','--tertiary','--on-tertiary','--tertiary-container','--on-tertiary-container','--error','--on-error','--error-container','--on-error-container','--success','--on-success','--success-container','--on-success-container','--warning','--on-warning','--warning-container','--on-warning-container','--untested','--on-untested','--untested-container','--on-untested-container','--background','--on-background','--surface','--on-surface','--surface-variant','--on-surface-variant','--surface-container-lowest','--surface-container-low','--surface-container','--surface-container-high','--surface-container-highest','--outline','--outline-variant','--inverse-surface','--inverse-on-surface','--inverse-primary','--scrim'],
+ 'State layers':['--state-hover','--state-focus','--state-pressed','--state-dragged','--disabled-content','--disabled-container'],
+ 'Spacing':['--gap-related','--gap-section','--gap-major','--layout-gutter','--target-min','--sp-2','--sp-4','--sp-8','--sp-12','--sp-16','--sp-20','--sp-24','--sp-32','--sp-40','--sp-48','--sp-64'],
+ 'Shape':['--r-none','--r-xs','--r-sm','--r-md','--r-lg','--r-xl','--r-full'],
+ 'Elevation':['--elev-0','--elev-1','--elev-2','--elev-3','--elev-4','--elev-5'],
+ 'Craft':['--ring','--focus-ring','--signature'],
+ 'Type families':['--font-display','--font-body','--font-mono'],
+ 'Motion':['--ease','--ease-emph-dec','--ease-emph-acc','--ease-spring','--dur-fast','--dur-base','--dur-slow'],
+ 'Icons':['--icon-size','--icon-inline','--icon-large','--icon-stroke','--icon-cap','--icon-join']};
+function tokenLines(){const out=[];for(const[g,names]of Object.entries(varGroups)){const rows=names.map(n=>{const v=cs.getPropertyValue(n).trim();return v?`- ${n} = ${v}`:null;}).filter(Boolean);if(rows.length)out.push(`### ${g}`,...rows,'');}return out;}
+function foundationsBody(){const L=[`## Foundations — design tokens (single source of truth)`,`Define every token below as a named constant in ONE theme file, idiomatic to ${promptLang} (for Compose: a ColorScheme via lightColorScheme(), an extended PPColors object for success/warning/untested, Typography with the 15 M3 styles, Shapes, and Spacing/Elevation objects). Components reference tokens by name — never inline raw values.`,'',...tokenLines(),`### Type scale (Nunito Sans, letter-spacing as listed in styles.css)`];
+ TYPE.forEach(([n,m])=>L.push(`- ${n}: ${m}`));
+ L.push('',`### Rules`,`- Every fill stays paired with its --on-* foreground; pairs are WCAG-checked (text ≥ 4.5:1). Don't break a pair.`,`- One interaction family: primary. Status colours (success/warning/error/untested) carry meaning only, never decoration, and always come with an icon + word.`,`- At most ONE VerdictBlock per screen; it is the screen's focal point.`,`- Elevation is tonal: cards are surface-container-lowest on background with no shadow; only floating elements get elev-2..5. Never border + shadow on one card.`,`- Semantic spacing: gap-related (8) < gap-section (24) < gap-major (40); screen gutter 20; touch targets ≥ 48.`,`- No emoji icons; use the Material-outlined icon set with round caps.`);
+ return L.join('\n');}
+function buildPrompt(key){const s=SPECS[key];const L=[`# Add or update the \`${s.name}\` component — ${promptLang}`,'',
+ `Part of the PhoneProof design system (Material 3 structure, "Signal blocks" theme). If a component with this role ALREADY EXISTS, modify it IN PLACE to match this spec (the source of truth) — don't duplicate, and note any breaking change. Otherwise create it at \`${s.file}\`, reusing the shared theme tokens.`,'',`## What it is`,s.desc,'',`## Props`];
+ s.props.forEach(p=>L.push(`- \`${p.n}\`: ${p.t}${p.def?` (default ${p.def})`:''}`));
+ L.push('',`## Design tokens (from the shared theme; never inline)`);s.tokens.forEach(t=>L.push(`- ${t.n} = ${t.v}   // ${t.r}`));
+ L.push('',`## Metrics (dp / sp)`);s.metrics.forEach(([k,v])=>L.push(`- ${k}: ${v}`));
+ L.push('',`## Requirements`,`- Implement every variant and state listed (enabled, pressed, focused with 2dp ring, disabled at .38/.12).`,`- Reference tokens by name; keep each fill paired with its on-colour.`,`- Touch targets ≥ 48dp; icon-only controls need a contentDescription.`,`- Output complete, compilable ${promptLang} code + a @Preview / usage example.`);return L.join('\n');}
+function copyPrompt(key){copyText(buildPrompt(key));toast(`Copied ${SPECS[key].name} prompt · ${promptLang}`);}
+function fullSystemPrompt(){const keys=Object.keys(SPECS);const L=[`# Install or update the PhoneProof design system — ${promptLang}`,'',`Set up this design system. If it doesn't exist, scaffold it; if parts exist, update them IN PLACE to match (this spec is the source of truth).`,'',`## Build order`,`1. Build the foundation token layer below as the single source of truth.`,`2. Build the components. They may be split across parallel workers, but every component imports the shared token layer from step 1 — never redefine colours or sizes locally. Keep naming and states consistent.`,`3. Reconcile: one components index + a pass confirming every component uses only named tokens.`,'','---','',foundationsBody(),'','---','',`## Components (${keys.length})`];
+ keys.forEach(k=>{const s=SPECS[k];L.push('',`### ${s.name} — \`${s.file}\``,s.desc,`- props: ${s.props.map(p=>p.n+': '+p.t).join(', ')}`,`- tokens: ${s.tokens.map(t=>t.n).join(', ')}`,`- metrics: ${s.metrics.map(m=>m[0]+' '+m[1]).join(', ')}`);});
+ L.push('','## Output',`- The theme file first, then each component with a short preview.`);return L.join('\n');}
+function copyFullSystem(){copyText(fullSystemPrompt());toast(`Copied install prompt · ${Object.keys(SPECS).length} components · ${promptLang}`);}
+function copyText(t){try{navigator.clipboard.writeText(t).catch(()=>{});}catch(e){}}
+document.querySelectorAll('main section[id]').forEach(sec=>{const key=sec.id;if(!SPECS[key])return;const h=sec.querySelector('h2.sec');if(!h||h.querySelector('.sec-prompt'))return;
+ const b=document.createElement('button');b.className='sec-prompt';b.type='button';b.textContent='Copy as prompt';b.addEventListener('click',()=>copyPrompt(key));h.appendChild(b);});
+
+/* ===== Dev Mode + Inspector ===== */
+function toggleDev(){const on=document.body.classList.toggle('dev');devToggle.classList.toggle('on',on);devToggle.textContent=on?'Dev Mode · on':'Dev Mode';if(!on)closeInspector();}
+function closeInspector(){document.body.classList.remove('inspecting');document.querySelectorAll('.insp-sel').forEach(e=>e.classList.remove('insp-sel'));}
+document.addEventListener('click',e=>{if(e.target.closest('#inspector')||e.target.closest('#topctl'))return;if(!document.body.classList.contains('dev'))return;
+ const el=e.target.closest('[data-insp]');if(el&&SPECS[el.dataset.insp]){e.preventDefault();selectComp(el,el.dataset.insp);}});
+function selectComp(el,key){document.querySelectorAll('.insp-sel').forEach(x=>x.classList.remove('insp-sel'));el.classList.add('insp-sel');document.body.classList.add('inspecting');const s=SPECS[key];
+ const props=s.props.map(p=>`<div class="prop"><span class="pn">${p.n}</span> <span class="pt">${p.t}</span>${p.def?` <span class="pdef">= ${p.def}</span>`:''}</div>`).join('');
+ const toks=s.tokens.map(t=>`<div class="tok" onclick="copyVal('${t.v.replace(/'/g,"")}')"><div class="tsw" style="background:${t.c||'var(--surface-container)'}"></div><div><div class="tn">${t.n}</div><div class="tr">${t.r}</div></div><div class="tv">${t.v}</div></div>`).join('');
+ const mets=s.metrics.map(([k,v])=>`<div class="metric"><span class="mk">${k}</span><span>${v}</span></div>`).join('');
+ inspectorBody.innerHTML=`<div class="nm">${s.name}</div><div class="file">${s.file}</div><div class="desc">${s.desc}</div><h4>Properties</h4>${props}<h4>Design tokens · click to copy</h4>${toks}<h4>Metrics</h4>${mets}<div class="btn btn-filled btn-block sl" style="margin-top:20px" onclick="copyPrompt('${key}')"><svg class="ico"><use href="#i-copy"/></svg>Copy as prompt</div>`;}
+function copyVal(v){copyText(v);toast('Copied '+v);}
+function toast(msg){copiedTxt.textContent=msg;copied.classList.add('show');setTimeout(()=>copied.classList.remove('show'),1500);}
+</script>
+</body>
+</html>

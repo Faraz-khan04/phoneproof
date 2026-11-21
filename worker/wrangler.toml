@@ -1,0 +1,35 @@
+# PhoneProof verify server. See worker/README.md for the 10-minute setup.
+name = "phoneproof"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[assets]
+directory = "../web/public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"   # /r/<id> serves index.html
+run_worker_first = true                           # /api/*, /keys.json, /roots.json are handled in src/index.js
+
+[[r2_buckets]]
+binding = "REPORTS"
+bucket_name = "phoneproof-reports"
+
+# 10 uploads per minute per IP.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }
+
+[triggers]
+crons = ["17 3 * * *"]   # refresh Google's roots and revocation list daily
+
+[vars]
+PACKAGE_NAME = "app.phoneproof"
+# SHA-256 of the Play app-signing certificate (Play Console > Test and release > App signing).
+# During development, add your debug cert too (see README). Comma-separated, colons allowed.
+SIGNING_CERT_SHA256 = ""
+CS_KID = "k1"
+# PUBLIC_BASE = "https://phoneproof.example.workers.dev"
+
+# Secrets (wrangler secret put NAME):
+#   CS_PRIVATE_JWK        countersign key, from: node scripts/genkey.mjs
+#   GCP_SERVICE_ACCOUNT   optional, service-account JSON with Play Integrity access
